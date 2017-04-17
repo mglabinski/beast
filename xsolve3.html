@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <style>
+  body{
+    display: table;
+    margin: auto;
+    text-align:center;
+  }
+  </style>
+
+<h2>Kingdom</h2>
+
+<p id="cointeiner"></p>
+
+<script>
+var obj, dbParam, xmlhttp, myObj, x, table = "";
+obj = {};
+dbParam = JSON.stringify(obj);
+xmlhttp = new XMLHttpRequest();
+xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        myObj = JSON.parse(this.responseText);
+        table += "<table border='2'><th>Name</th><th>Surname</th><th>Date of Birth</th><th>Work as</th><th>Experience</th>"
+        for (x in myObj) {
+            table += "<tr><td>" +  myObj[x].firstName + "<td>" + myObj[x].lastName +"<td>" + myObj[x].dateOfBirth
+            + "<td>" + myObj[x].function + "<td>" + myObj[x].experience + "</td></tr>";
+        }
+        table += "</table>"
+        document.getElementById("cointeiner").innerHTML = table;
+    }
+};
+xmlhttp.open("GET", 'https://raw.githubusercontent.com/mglabinski/beast/master/danee.json', true);
+xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xmlhttp.send("x=" + dbParam);
+
+</script>
+
+</body>
+</html>
