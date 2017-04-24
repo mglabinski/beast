@@ -57,6 +57,8 @@ var sortKey = 'firstName';
 var page = 1;
 var rowsOnPage = 5;
 
+var filter = {};
+
 function getPage(records) {
   var first = (page - 1) * rowsOnPage;
   return records.slice(first, first + rowsOnPage); // wyswietlanie 0-4, 5-9 10-14
@@ -86,15 +88,6 @@ $('th.firstName .sort').click(function() {
   renderTable();
 });
 
-$('th.firstName .filter').change(function() {
-  var value = $(this).val().toLowerCase();//val zwraca nam aktualny input
-  filteredRecords = records.filter(function(r) {
-    return r.firstName.toLowerCase().lastIndexOf(value, 0) === 0; // https://www.w3schools.com/JSREF/jsref_lastindexof.asp
-  });
-  page = 1;
-  renderTable();
-});
-
 $('th.lastName').click(function() {
   sortKey = 'lastName';
   records.sort(sortByString);
@@ -121,6 +114,39 @@ $('.paging .next').click(function() {
     renderTable();
   }
 });
+
+$('th.firstName .filter').change(function() {
+  filter.firstName = $(this).val(); //val zwraca nam aktualny input
+  filterTable();
+});
+
+$('th.lastName .filter').change(function() {
+  filter.lastName = $(this).val(); //val zwraca nam aktualny input
+  filterTable();
+});
+
+$('th.function .filter').change(function() {
+  filter.function = $(this).val(); //val zwraca nam aktualny input
+  filterTable();
+});
+
+function stringFilter(value, filterValue) {
+  if (!filterValue) { //sprawdza czy podana wartosc formularza
+    return true;
+  } else {
+    return value.toLowerCase().lastIndexOf(filterValue.toLowerCase(), 0) === 0; // https://www.w3schools.com/JSREF/jsref_lastindexof.asp
+  }
+}
+
+function filterTable() {
+  filteredRecords = records.filter(function(r) {
+    return stringFilter(r.firstName, filter.firstName) &&
+            stringFilter(r.lastName, filter.lastName) &&
+            stringFilter(r.function, filter.function);
+  });
+  page = 1;
+  renderTable();
+}
 
 var obj, dbParam, xmlhttp, myObj, x, table = "";
 obj = {};
