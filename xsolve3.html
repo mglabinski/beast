@@ -90,7 +90,8 @@ $('.paging .previous').click(function() {
 });
 
 $('.paging .next').click(function() {
-  var numberOfPages = (records.length - 1) / rowsOnPage + 1;//wylicza mi liczbe stron
+  var numberOfPages = Math.trunc((records.length - 1) / rowsOnPage + 1);//wylicza mi liczbe stron
+  console.log(numberOfPages);
   if (page < numberOfPages){
     page += 1;
     renderTable();
