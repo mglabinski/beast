@@ -1,72 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/picker.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/picker.date.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/classic.css"/>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/classic.date.css"/>
-<style>
-body{
-  display: table;
-  margin: auto;
-  text-align:center;
-}
-</style>
-</head>
-
-<body>
-  <h2>Kingdom</h2>
-  <div id="container">
-<table>
-  <thead>
-    <tr>
-      <th class="firstName">
-        <a href="#" class="sort">Name</a>
-      </th>
-      <th class="lastName">
-        <a href="#" class="sort">Surname</a>
-      </th>
-      <th class="dateOfBirth">
-        <a href="#" class="sort">Date of Birth</a>
-      </th>
-      <th class="function">
-        <a href="#" class="sort">Work as</a>
-      </th>
-      <th class="experience">
-        <a href="#" class="sort">Experience</a>
-      </th>
-    </tr>
-    <tr>
-      <th class="firstName">
-        <input class="filter" type="text"/>
-      </th>
-      <th class="lastName">
-        <input class="filter" type="text"/>
-      </th>
-      <th class="dateOfBirth">
-        <input class="filter" type="text"/>
-      </th>
-      <th class="function">
-        <input class="filter" type="text"/>
-      </th>
-      <th class="experience">
-        <input class="filter" type="number" />
-      </th>
-    </tr>
-  </thead>
-  <tbody id="data">
-  </tbody>
-</table>
-
-  </div>
-  <div class="paging">
-    <a href="#" class="previous">Previous</a>
-    <a href="#" class="next">Next</a>
-  </div>
-
-<script>
 
 var dateFormat = 'DD.MM.YYYY HH:mm';
 
@@ -228,29 +159,37 @@ function filterTable(newKey, newValue) {
 }
 
 
-var xmlhttp = new XMLHttpRequest();
+// var xmlhttp = new XMLHttpRequest();
+//
+// xmlhttp.open("GET", 'https://raw.githubusercontent.com/mglabinski/beast/master/danee.json', true);
+// xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+// xmlhttp.send("x={}");
+//
+// xmlhttp.onreadystatechange = function() {
+//     if (this.readyState == 4 && this.status == 200) {
+//
+//         records = JSON.parse(this.responseText);
+//         //zmiana stringu na date(przy sortowaniu ok)
+//         for (i in records) {
+//           records[i].dateOfBirth = moment(records[i].dateOfBirth, dateFormat).toDate();//konwersja moment
+//
+//           console.log(records[i].dateOfBirth);
+//         }
+//
+//         filteredRecords = records;
+//         renderTable();
+//         // console.log(table);
+//   }
+// };
 
-xmlhttp.open("GET", 'https://raw.githubusercontent.com/mglabinski/beast/master/danee.json', true);
-xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xmlhttp.send("x={}");
+$.getJSON("https://raw.githubusercontent.com/mglabinski/beast/master/danee.json", function(result){
 
-xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
+  records = result;
 
-        records = JSON.parse(this.responseText);
-        //zmiana stringu na date(przy sortowaniu ok)
-        for (i in records) {
-          records[i].dateOfBirth = moment(records[i].dateOfBirth, dateFormat).toDate();//konwersja moment
-
-          console.log(records[i].dateOfBirth);
-        }
-
-        filteredRecords = records;
-        renderTable();
-        // console.log(table);
+  for (i in records) {
+    records[i].dateOfBirth = moment(records[i].dateOfBirth, dateFormat).toDate();//konwersja moment
   }
-};
-</script>
 
-</body>
-</html>
+  filteredRecords = records;
+  renderTable();
+});
