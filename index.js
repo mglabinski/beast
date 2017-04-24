@@ -181,15 +181,18 @@ function filterTable(newKey, newValue) {
 //         // console.log(table);
 //   }
 // };
+$(document).ready(function () {
 
-$.getJSON("https://raw.githubusercontent.com/mglabinski/beast/master/danee.json", function(result){
+  $.getJSON("https://raw.githubusercontent.com/mglabinski/beast/master/danee.json", function(result){
 
-  records = result;
+    records = result;
 
-  for (i in records) {
-    records[i].dateOfBirth = moment(records[i].dateOfBirth, dateFormat).toDate();//konwersja moment
-  }
+    for (i in records) {
+      records[i].dateOfBirth = moment(records[i].dateOfBirth, dateFormat).toDate();//konwersja moment
+    }
 
-  filteredRecords = records;
-  renderTable();
+    filteredRecords = records;
+    renderTable();
+  });
+
 });
