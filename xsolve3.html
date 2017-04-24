@@ -2,6 +2,7 @@
 <html>
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 <style>
 body{
   display: table;
@@ -20,10 +21,18 @@ body{
       <th class="firstName">
         <a href="#" class="sort">Name</a>
       </th>
-      <th class="lastName">Surname</th>
-      <th>Date of Birth</th>
-      <th class="function">Work as</th>
-      <th>Experience</th>
+      <th class="lastName">
+        <a href="#" class="sort">Surname</a>
+        </th>
+      <th class="dateOfBirth">
+        <a href="#" class="sort">Date of Birth</a>
+        </th>
+      <th class="function">
+        <a href="#" class="sort">Work as</a>
+        </th>
+      <th class="experience">
+        <a href="#" class="sort">Experience</a>
+        </th>
     </tr>
     <tr>
       <th class="firstName">
@@ -51,9 +60,12 @@ body{
 
 <script>
 
+var dateFormat = 'DD.MM.YYYY HH:mm';
+
 var records = [];
 var filteredRecords = []; //=records (bez filtracji)
 var sortKey = 'firstName';
+var order = 1; // 1 - rosnąco, -1 - malejąco
 var page = 1;
 var rowsOnPage = 5;
 
@@ -71,33 +83,57 @@ function renderTable() { //pojedyncze renderowanie tablicy
   var table = '';
   for (x in recordsToDisplay) {
       var record = recordsToDisplay[x];
-      table += "<tr><td>" +  record.firstName + "<td>" + record.lastName +"<td>" + record.dateOfBirth
+      table += "<tr><td>" +  record.firstName + "<td>" + record.lastName +"<td>" + moment(record.dateOfBirth).format(dateFormat)
       + "<td>" + record.function + "<td>" + record.experience + "</td></tr>";
   };
   $('#container tbody').html(table);//  wrzucam inner html
 }
 
 
-function sortByString(a, b){ //sortujemy w srodku records(json)
-  return ((a[sortKey] < b[sortKey]) ? -1 : ((a[sortKey] > b[sortKey]) ? 1:0));
+// function sortBySortKey(a, b){ //sortujemy w srodku records(json)
+//   return ((a[sortKey] < b[sortKey]) ? -1 : ((a[sortKey] > b[sortKey]) ? 1:0));
+// }
+
+function sortRecords(newSortKey) {
+
+  if (sortKey === newSortKey) {// jezeli 2 raz klikne na to samo to sie zmienia kolejnosc
+    order = -order;
+  }
+
+  sortKey = newSortKey;
+
+  records.sort(function(a, b){ //sortujemy w srodku records(json)
+    var result =  ((a[sortKey] < b[sortKey]) ? -1 : ((a[sortKey] > b[sortKey]) ? 1:0));
+    return result * order;
+  });
+  renderTable();
 }
 
 $('th.firstName .sort').click(function() {
-  sortKey = 'firstName';
-  records.sort(sortByString);
-  renderTable();
+  sortRecords('firstName');
+  // sortKey = 'firstName';
+  // records.sort(sortBySortKey);
+  // renderTable();
 });
 
-$('th.lastName').click(function() {
-  sortKey = 'lastName';
-  records.sort(sortByString);
-  renderTable();
+$('th.lastName .sort').click(function() {
+  // sortKey = 'lastName';
+  sortRecords('lastName');
 });
 
-$('th.function').click(function() {
-  sortKey = 'function';
-  records.sort(sortByString);
-  renderTable();
+$('th.function .sort').click(function() {
+  // sortKey = 'function';
+  sortRecords('function');
+});
+
+$('th.experience .sort').click(function() {
+  // sortKey = 'experience';
+  sortRecords('experience');
+});
+
+$('th.dateOfBirth .sort').click(function() {
+  // sortKey = 'dateOfBirth';
+  sortRecords('dateOfBirth');
 });
 
 $('.paging .previous').click(function() {
@@ -131,7 +167,7 @@ $('th.function .filter').change(function() {
 });
 
 function stringFilter(value, filterValue) {
-  if (!filterValue) { //sprawdza czy podana wartosc formularza
+  if (!filterValue) { //sprawdza czy jest podana wartosc formularza
     return true;
   } else {
     return value.toLowerCase().lastIndexOf(filterValue.toLowerCase(), 0) === 0; // https://www.w3schools.com/JSREF/jsref_lastindexof.asp
@@ -159,11 +195,20 @@ xmlhttp.send("x=" + dbParam);
 
 xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
+
         records = JSON.parse(this.responseText);
+        //zmiana stringu na date(przy sortowaniu ok)
+        for (i in records) {
+          records[i].dateOfBirth = moment(records[i].dateOfBirth, dateFormat).toDate();//konwersja moment
+
+          console.log(records[i].dateOfBirth);
+        }
+
         filteredRecords = records;
         renderTable();
         // console.log(table);
-}};
+  }
+};
 </script>
 
 </body>
