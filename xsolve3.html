@@ -3,6 +3,10 @@
 <head>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/picker.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/picker.date.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/classic.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pickadate.js/3.5.6/compressed/themes/classic.date.css"/>
 <style>
 body{
   display: table;
@@ -23,16 +27,16 @@ body{
       </th>
       <th class="lastName">
         <a href="#" class="sort">Surname</a>
-        </th>
+      </th>
       <th class="dateOfBirth">
         <a href="#" class="sort">Date of Birth</a>
-        </th>
+      </th>
       <th class="function">
         <a href="#" class="sort">Work as</a>
-        </th>
+      </th>
       <th class="experience">
         <a href="#" class="sort">Experience</a>
-        </th>
+      </th>
     </tr>
     <tr>
       <th class="firstName">
@@ -41,7 +45,9 @@ body{
       <th class="lastName">
         <input class="filter" type="text"/>
       </th>
-      <th></th>
+      <th class="dateOfBirth">
+        <input class="filter" type="text"/>
+      </th>
       <th class="function">
         <input class="filter" type="text"/>
       </th>
@@ -50,7 +56,7 @@ body{
       </th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="data">
   </tbody>
 </table>
 
@@ -88,7 +94,7 @@ function renderTable() { //pojedyncze renderowanie tablicy
       table += "<tr><td>" +  record.firstName + "<td>" + record.lastName +"<td>" + moment(record.dateOfBirth).format(dateFormat)
       + "<td>" + record.function + "<td>" + record.experience + "</td></tr>";
   };
-  $('#container tbody').html(table);//  wrzucam inner html
+  $('#container #data').html(table);//  wrzucam inner html
 }
 
 
@@ -104,7 +110,7 @@ function sortRecords(newSortKey) {
 
   sortKey = newSortKey;
 
-  records.sort(function(a, b){ //sortujemy w srodku records(json)
+  filteredRecords.sort(function(a, b){ //sortujemy w srodku records(json)
     var result =  ((a[sortKey] < b[sortKey]) ? -1 : ((a[sortKey] > b[sortKey]) ? 1:0));
     return result * order;// reverse sorting
   });
@@ -173,6 +179,18 @@ $('th.experience .filter').change(function() {
   filterTable('experience', $(this).val());
 });
 
+$('th.dateOfBirth .filter').pickadate({//konfiguracja pickdate
+  format: 'dd.mm.yyyy',
+  selectYears: 100,
+  selectMonths: true
+});
+
+$('th.dateOfBirth .filter').change(function() {
+  console.log( $(this).val());
+  // filter.experience = $(this).val(); //val zwraca nam aktualny input
+  filterTable('dateOfBirth', $(this).val());
+});
+
 function stringFilter(value, filterValue) {
   if (!filterValue) { //sprawdza czy jest podana wartosc formularza
     return true;
@@ -189,6 +207,11 @@ function intFilter(value, filterValue) {
   }
 }
 
+function dateFilter(value, filterValue) {
+  var stringValue = moment(value).format(dateFormat);
+  return stringFilter(stringValue, filterValue);
+}
+
 function filterTable(newKey, newValue) {
 
   filter[newKey] = newValue;
@@ -196,6 +219,7 @@ function filterTable(newKey, newValue) {
   filteredRecords = records.filter(function(r) {
     return stringFilter(r.firstName, filter.firstName) &&
             stringFilter(r.lastName, filter.lastName) &&
+            dateFilter(r.dateOfBirth, filter.dateOfBirth) &&
             stringFilter(r.function, filter.function) &&
             intFilter(r.experience, filter.experience);
   });
