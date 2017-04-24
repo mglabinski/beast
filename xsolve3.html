@@ -227,14 +227,12 @@ function filterTable(newKey, newValue) {
   renderTable();
 }
 
-var obj, dbParam, xmlhttp, myObj, x, table = "";
-obj = {};
-dbParam = JSON.stringify(obj);
-xmlhttp = new XMLHttpRequest();
+
+var xmlhttp = new XMLHttpRequest();
 
 xmlhttp.open("GET", 'https://raw.githubusercontent.com/mglabinski/beast/master/danee.json', true);
 xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-xmlhttp.send("x=" + dbParam);
+xmlhttp.send("x={}");
 
 xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
