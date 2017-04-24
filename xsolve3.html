@@ -17,11 +17,26 @@ body{
 <table>
   <thead>
     <tr>
-      <th class="firstName">Name</th>
+      <th class="firstName">
+        <a href="#" class="sort">Name</a>
+      </th>
       <th class="lastName">Surname</th>
       <th>Date of Birth</th>
       <th class="function">Work as</th>
       <th>Experience</th>
+    </tr>
+    <tr>
+      <th class="firstName">
+        <input class="filter" type="text"/>
+      </th>
+      <th class="lastName">
+        <input class="filter" type="text"/>
+      </th>
+      <th></th>
+      <th class="function">
+        <input class="filter" type="text"/>
+      </th>
+      <th></th>
     </tr>
   </thead>
   <tbody>
@@ -37,6 +52,7 @@ body{
 <script>
 
 var records = [];
+var filteredRecords = []; //=records (bez filtracji)
 var sortKey = 'firstName';
 var page = 1;
 var rowsOnPage = 5;
@@ -48,7 +64,7 @@ function getPage(records) {
 
 function renderTable() { //pojedyncze renderowanie tablicy
 
-  var recordsToDisplay = getPage(records);//funkcja getPage wybiera rekordy do wyświetlenia
+  var recordsToDisplay = getPage(filteredRecords);//funkcja getPage wybiera rekordy do wyświetlenia
 
   var table = '';
   for (x in recordsToDisplay) {
@@ -64,9 +80,18 @@ function sortByString(a, b){ //sortujemy w srodku records(json)
   return ((a[sortKey] < b[sortKey]) ? -1 : ((a[sortKey] > b[sortKey]) ? 1:0));
 }
 
-$('th.firstName').click(function() {
+$('th.firstName .sort').click(function() {
   sortKey = 'firstName';
   records.sort(sortByString);
+  renderTable();
+});
+
+$('th.firstName .filter').change(function() {
+  var value = $(this).val().toLowerCase();//val zwraca nam aktualny input
+  filteredRecords = records.filter(function(r) {
+    return r.firstName.toLowerCase().lastIndexOf(value, 0) === 0; // https://www.w3schools.com/JSREF/jsref_lastindexof.asp
+  });
+  page = 1;
   renderTable();
 });
 
@@ -90,8 +115,7 @@ $('.paging .previous').click(function() {
 });
 
 $('.paging .next').click(function() {
-  var numberOfPages = Math.trunc((records.length - 1) / rowsOnPage + 1);//wylicza mi liczbe stron
-  console.log(numberOfPages);
+  var numberOfPages = Math.trunc((filteredRecords.length - 1) / rowsOnPage + 1);//wylicza mi liczbe stron
   if (page < numberOfPages){
     page += 1;
     renderTable();
@@ -110,6 +134,7 @@ xmlhttp.send("x=" + dbParam);
 xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
         records = JSON.parse(this.responseText);
+        filteredRecords = records;
         renderTable();
         // console.log(table);
 }};
