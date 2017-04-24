@@ -45,7 +45,9 @@ body{
       <th class="function">
         <input class="filter" type="text"/>
       </th>
-      <th></th>
+      <th class="experience">
+        <input class="filter" type="number" />
+      </th>
     </tr>
   </thead>
   <tbody>
@@ -104,7 +106,7 @@ function sortRecords(newSortKey) {
 
   records.sort(function(a, b){ //sortujemy w srodku records(json)
     var result =  ((a[sortKey] < b[sortKey]) ? -1 : ((a[sortKey] > b[sortKey]) ? 1:0));
-    return result * order;
+    return result * order;// reverse sorting
   });
   renderTable();
 }
@@ -152,18 +154,23 @@ $('.paging .next').click(function() {
 });
 
 $('th.firstName .filter').change(function() {
-  filter.firstName = $(this).val(); //val zwraca nam aktualny input
-  filterTable();
+  // filter.firstName = $(this).val(); //val zwraca nam aktualny input
+  filterTable('firstName', $(this).val());
 });
 
 $('th.lastName .filter').change(function() {
-  filter.lastName = $(this).val(); //val zwraca nam aktualny input
-  filterTable();
+  // filter.lastName = $(this).val(); // val zwraca nam aktualny input
+  filterTable('lastName', $(this).val());
 });
 
 $('th.function .filter').change(function() {
-  filter.function = $(this).val(); //val zwraca nam aktualny input
-  filterTable();
+  // filter.function = $(this).val(); //val zwraca nam aktualny input
+  filterTable('function', $(this).val());
+});
+
+$('th.experience .filter').change(function() {
+  // filter.experience = $(this).val(); //val zwraca nam aktualny input
+  filterTable('experience', $(this).val());
 });
 
 function stringFilter(value, filterValue) {
@@ -174,11 +181,23 @@ function stringFilter(value, filterValue) {
   }
 }
 
-function filterTable() {
+function intFilter(value, filterValue) {
+  if (!filterValue && filterValue != 0 || filterValue === '') { //0==false js // gdy usuwam z inputa, daje mi pusty string
+    return true;
+  } else {
+    return value == filterValue; // nie === bo rowna sie dany typ , a == to nie
+  }
+}
+
+function filterTable(newKey, newValue) {
+
+  filter[newKey] = newValue;
+
   filteredRecords = records.filter(function(r) {
     return stringFilter(r.firstName, filter.firstName) &&
             stringFilter(r.lastName, filter.lastName) &&
-            stringFilter(r.function, filter.function);
+            stringFilter(r.function, filter.function) &&
+            intFilter(r.experience, filter.experience);
   });
   page = 1;
   renderTable();
