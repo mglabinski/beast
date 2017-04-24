@@ -13,9 +13,60 @@ body{
 
 <body>
   <h2>Kingdom</h2>
-  <table id="cointeiner"></table>
+  <div id="container">
+<table>
+  <thead>
+    <tr>
+      <th class="firstName">Name</th>
+      <th class="lastName">Surname</th>
+      <th>Date of Birth</th>
+      <th class="function">Work as</th>
+      <th>Experience</th>
+    </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+  </div>
 
 <script>
+
+var records = [];
+var sortKey = 'firstName';
+
+function renderTable() { //pojedyncze renderowanie tablicy
+  var table = '';
+  for (x in records) {
+      table += "<tr><td>" +  records[x].firstName + "<td>" + records[x].lastName +"<td>" + records[x].dateOfBirth
+      + "<td>" + records[x].function + "<td>" + records[x].experience + "</td></tr>";
+  };
+  $('#container tbody').empty().html(table);//empty - czyszcze wrzucam inner html
+}
+
+
+function sortByString(a, b){ //sortujemy w srodku records(json)
+  return ((a[sortKey] < b[sortKey]) ? -1 : ((a[sortKey] > b[sortKey]) ? 1:0));
+}
+
+$('th.firstName').click(function() {
+  sortKey = 'firstName';
+  records.sort(sortByString);
+  renderTable();
+});
+
+$('th.lastName').click(function() {
+  sortKey = 'lastName';
+  records.sort(sortByString);
+  renderTable();
+});
+
+$('th.function').click(function() {
+  sortKey = 'function';
+  records.sort(sortByString);
+  renderTable();
+});
+
 var obj, dbParam, xmlhttp, myObj, x, table = "";
 obj = {};
 dbParam = JSON.stringify(obj);
@@ -27,39 +78,10 @@ xmlhttp.send("x=" + dbParam);
 
 xmlhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-        myObj = JSON.parse(this.responseText);
-        table += "<table border='2'><thead><tr><th>Name</th><th>Surname</th><th>Date of Birth</th><th>Work as</th><th>Experience</th></tr></thead><tbody>"
-        for (x in myObj) {
-            table += "<tr><td>" +  myObj[x].firstName + "<td>" + myObj[x].lastName +"<td>" + myObj[x].dateOfBirth
-            + "<td>" + myObj[x].function + "<td>" + myObj[x].experience + "</td></tr>";
-        };
-        table += "</tbody></table>";
-        document.getElementById("cointeiner").innerHTML = table;
+        records = JSON.parse(this.responseText);
+        renderTable();
         // console.log(table);
 }};
-
-$(document).on('click', 'th', function() {
-    var table = $(this).parents('#cointeiner').eq(0);
-    var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()));
-    this.asc = !this.asc;
-    if (!this.asc) {
-      rows = rows.reverse();
-    }
-    table.children('tbody').empty().html(rows);
-});
-
-function comparer(index) {
-  return function(a, b) {
-    var valA = getCellValue(a, index),
-      valB = getCellValue(b, index);
-    return $.isNumeric(valA) && $.isNumeric(valB) ?
-      valA - valB : valA.localeCompare(valB);
-  };
-}
-
-function getCellValue(row, index) {
-  return $(row).children('td').eq(index).text();
-}
 </script>
 
 </body>
