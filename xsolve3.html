@@ -29,19 +29,34 @@ body{
 </table>
 
   </div>
+  <div class="paging">
+    <a href="#" class="previous">Previous</a>
+    <a href="#" class="next">Next</a>
+  </div>
 
 <script>
 
 var records = [];
 var sortKey = 'firstName';
+var page = 1;
+var rowsOnPage = 5;
+
+function getPage(records) {
+  var first = (page - 1) * rowsOnPage;
+  return records.slice(first, first + rowsOnPage); // wyswietlanie 0-4, 5-9 10-14
+}
 
 function renderTable() { //pojedyncze renderowanie tablicy
+
+  var recordsToDisplay = getPage(records);//funkcja getPage wybiera rekordy do wyświetlenia
+
   var table = '';
-  for (x in records) {
-      table += "<tr><td>" +  records[x].firstName + "<td>" + records[x].lastName +"<td>" + records[x].dateOfBirth
-      + "<td>" + records[x].function + "<td>" + records[x].experience + "</td></tr>";
+  for (x in recordsToDisplay) {
+      var record = recordsToDisplay[x];
+      table += "<tr><td>" +  record.firstName + "<td>" + record.lastName +"<td>" + record.dateOfBirth
+      + "<td>" + record.function + "<td>" + record.experience + "</td></tr>";
   };
-  $('#container tbody').empty().html(table);//empty - czyszcze wrzucam inner html
+  $('#container tbody').html(table);//  wrzucam inner html
 }
 
 
@@ -65,6 +80,21 @@ $('th.function').click(function() {
   sortKey = 'function';
   records.sort(sortByString);
   renderTable();
+});
+
+$('.paging .previous').click(function() {
+  if (page>1){
+    page -= 1;
+    renderTable();
+  }
+});
+
+$('.paging .next').click(function() {
+  var numberOfPages = (records.length - 1) / rowsOnPage + 1;//wylicza mi liczbe stron
+  if (page < numberOfPages){
+    page += 1;
+    renderTable();
+  }
 });
 
 var obj, dbParam, xmlhttp, myObj, x, table = "";
