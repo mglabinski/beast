@@ -29,10 +29,6 @@ function renderTable() { //pojedyncze renderowanie tablicy
 }
 
 
-// function sortBySortKey(a, b){ //sortujemy w srodku records(json)
-//   return ((a[sortKey] < b[sortKey]) ? -1 : ((a[sortKey] > b[sortKey]) ? 1:0));
-// }
-
 function sortRecords(newSortKey) {
 
   if (sortKey === newSortKey) {// jezeli 2 raz klikne na to samo to sie zmienia kolejnosc
@@ -50,28 +46,21 @@ function sortRecords(newSortKey) {
 
 $('th.firstName .sort').click(function() {
   sortRecords('firstName');
-  // sortKey = 'firstName';
-  // records.sort(sortBySortKey);
-  // renderTable();
 });
 
 $('th.lastName .sort').click(function() {
-  // sortKey = 'lastName';
   sortRecords('lastName');
 });
 
 $('th.function .sort').click(function() {
-  // sortKey = 'function';
   sortRecords('function');
 });
 
 $('th.experience .sort').click(function() {
-  // sortKey = 'experience';
   sortRecords('experience');
 });
 
 $('th.dateOfBirth .sort').click(function() {
-  // sortKey = 'dateOfBirth';
   sortRecords('dateOfBirth');
 });
 
@@ -91,22 +80,18 @@ $('.paging .next').click(function() {
 });
 
 $('th.firstName .filter').change(function() {
-  // filter.firstName = $(this).val(); //val zwraca nam aktualny input
   filterTable('firstName', $(this).val());
 });
 
 $('th.lastName .filter').change(function() {
-  // filter.lastName = $(this).val(); // val zwraca nam aktualny input
   filterTable('lastName', $(this).val());
 });
 
 $('th.function .filter').change(function() {
-  // filter.function = $(this).val(); //val zwraca nam aktualny input
   filterTable('function', $(this).val());
 });
 
 $('th.experience .filter').change(function() {
-  // filter.experience = $(this).val(); //val zwraca nam aktualny input
   filterTable('experience', $(this).val());
 });
 
@@ -118,7 +103,6 @@ $('th.dateOfBirth .filter').pickadate({//konfiguracja pickdate
 
 $('th.dateOfBirth .filter').change(function() {
   console.log( $(this).val());
-  // filter.experience = $(this).val(); //val zwraca nam aktualny input
   filterTable('dateOfBirth', $(this).val());
 });
 
@@ -158,29 +142,6 @@ function filterTable(newKey, newValue) {
   renderTable();
 }
 
-
-// var xmlhttp = new XMLHttpRequest();
-//
-// xmlhttp.open('GET', 'https://raw.githubusercontent.com/mglabinski/beast/master/danee.json', true);
-// xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-// xmlhttp.send('x={}');
-//
-// xmlhttp.onreadystatechange = function() {
-//     if (this.readyState == 4 && this.status == 200) {
-//
-//         records = JSON.parse(this.responseText);
-//         //zmiana stringu na date(przy sortowaniu ok)
-//         for (i in records) {
-//           records[i].dateOfBirth = moment(records[i].dateOfBirth, dateFormat).toDate();//konwersja moment
-//
-//           console.log(records[i].dateOfBirth);
-//         }
-//
-//         filteredRecords = records;
-//         renderTable();
-//         // console.log(table);
-//   }
-// };
 $(document).ready(function () {
 
   $.getJSON('https://raw.githubusercontent.com/mglabinski/beast/master/danee.json', function(result){
