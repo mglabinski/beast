@@ -22,8 +22,8 @@ function renderTable() { //pojedyncze renderowanie tablicy
   var table = '';
   for (x in recordsToDisplay) {
       var record = recordsToDisplay[x];
-      table += "<tr><td>" +  record.firstName + "<td>" + record.lastName +"<td>" + moment(record.dateOfBirth).format(dateFormat)
-      + "<td>" + record.function + "<td>" + record.experience + "</td></tr>";
+      table += '<tr><td>' +  record.firstName + '<td>' + record.lastName +'<td>' + moment(record.dateOfBirth).format(dateFormat)
+      + '<td>' + record.function + '<td>' + record.experience + '</td></tr>';
   };
   $('#container #data').html(table);//  wrzucam inner html
 }
@@ -161,9 +161,9 @@ function filterTable(newKey, newValue) {
 
 // var xmlhttp = new XMLHttpRequest();
 //
-// xmlhttp.open("GET", 'https://raw.githubusercontent.com/mglabinski/beast/master/danee.json', true);
-// xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-// xmlhttp.send("x={}");
+// xmlhttp.open('GET', 'https://raw.githubusercontent.com/mglabinski/beast/master/danee.json', true);
+// xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+// xmlhttp.send('x={}');
 //
 // xmlhttp.onreadystatechange = function() {
 //     if (this.readyState == 4 && this.status == 200) {
@@ -183,7 +183,7 @@ function filterTable(newKey, newValue) {
 // };
 $(document).ready(function () {
 
-  $.getJSON("https://raw.githubusercontent.com/mglabinski/beast/master/danee.json", function(result){
+  $.getJSON('https://raw.githubusercontent.com/mglabinski/beast/master/danee.json', function(result){
 
     records = result;
 
