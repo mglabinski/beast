@@ -21,9 +21,9 @@ function renderTable() { //pojedyncze renderowanie tablicy
 
   var table = '';
   for (x in recordsToDisplay) {
-      var record = recordsToDisplay[x];
-      table += '<tr><td>' +  record.firstName + '<td>' + record.lastName +'<td>' + moment(record.dateOfBirth).format(dateFormat)
-      + '<td>' + record.function + '<td>' + record.experience + '</td></tr>';
+    var record = recordsToDisplay[x];
+    table += '<tr><td>' +  record.firstName + '<td>' + record.lastName +'<td>' + moment(record.dateOfBirth).format(dateFormat)
+    + '<td>' + record.function + '<td>' + record.experience + '</td></tr>';
   };
   $('#container #data').html(table);//  wrzucam inner html
 }
@@ -149,10 +149,10 @@ function filterTable(newKey, newValue) {
 
   filteredRecords = records.filter(function(r) {
     return stringFilter(r.firstName, filter.firstName) &&
-            stringFilter(r.lastName, filter.lastName) &&
-            dateFilter(r.dateOfBirth, filter.dateOfBirth) &&
-            stringFilter(r.function, filter.function) &&
-            intFilter(r.experience, filter.experience);
+    stringFilter(r.lastName, filter.lastName) &&
+    dateFilter(r.dateOfBirth, filter.dateOfBirth) &&
+    stringFilter(r.function, filter.function) &&
+    intFilter(r.experience, filter.experience);
   });
   page = 1;
   renderTable();
